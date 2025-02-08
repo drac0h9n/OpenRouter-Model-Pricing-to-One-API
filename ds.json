@@ -1,0 +1,30 @@
+[
+  {
+    "model": "Pro/deepseek-ai/DeepSeek-V3",
+    "type": "tokens",
+    "channel_type": 28,
+    "input": 143,
+    "output": 572
+  },
+  {
+    "model": "deepseek-ai/DeepSeek-V3",
+    "type": "tokens",
+    "channel_type": 28,
+    "input": 143,
+    "output": 572
+  },
+  {
+    "model": "Pro/deepseek-ai/DeepSeek-R1",
+    "type": "tokens",
+    "channel_type": 28,
+    "input": 286,
+    "output": 1142
+  },
+  {
+    "model": "deepseek-ai/DeepSeek-R1",
+    "type": "tokens",
+    "channel_type": 28,
+    "input": 286,
+    "output": 1142
+  }
+]

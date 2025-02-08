@@ -1,8 +1,13 @@
 const http = require('http');
 const https = require('https');
 
-const IP = '0.0.0.0'; // Change this to your desired IP address
-const PORT = 47999; // Change this to your desired port
+const IP = '0.0.0.0'; // 请根据需要修改 IP 地址
+const PORT = 80; // 请根据需要修改端口号
+
+// 辅助函数：将数字四舍五入到小数点后三位
+function roundToThree(num) {
+    return Math.round(num * 1000) / 1000;
+}
 
 const server = http.createServer((req, res) => {
     if (req.url === '/openrouterpricing.json') {
@@ -21,10 +26,17 @@ const server = http.createServer((req, res) => {
                     const jsonA = JSON.parse(data);
                     const modelsArray = jsonA.data; // 访问 'data' 属性
 
+                    // 先映射生成新数组，然后过滤掉 input 或 output 小于 0 的条目
                     const jsonB = modelsArray.map(item => {
                         const model = item.id;
-                        const input = parseFloat(item.pricing.prompt) * 1000 / 0.002;
-                        const output = parseFloat(item.pricing.completion) * 1000 / 0.002;
+                        // 计算 input 和 output
+                        let input = parseFloat(item.pricing.prompt) * 1000 / 0.002;
+                        let output = parseFloat(item.pricing.completion) * 1000 / 0.002;
+                        
+                        // 四舍五入到小数点后三位
+                        input = roundToThree(input);
+                        output = roundToThree(output);
+                        
                         return {
                             model: model,
                             type: "tokens",
@@ -32,7 +44,8 @@ const server = http.createServer((req, res) => {
                             input: input,
                             output: output
                         };
-                    });
+                    }).filter(item => item.input >= 0 && item.output >= 0);
+
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify(jsonB));
                 } catch (e) {
